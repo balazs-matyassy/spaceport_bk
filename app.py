@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, render_template, request, redirect, url_for
 
-from repository.products import load_all_products, setup_products, save_product
+from repository.products import load_all_products, setup_products, save_product, load_product
 
 PRODUCTS_PATH = None
 
@@ -46,7 +46,26 @@ def create_product():
         return redirect(url_for("list_products"))
 
     return render_template(
-        'products/create.html', product=product)
+        'products/edit.html',
+        create=True,
+        product=product
+    )
+
+
+@app.route('/products/<int:product_id>/edit', methods=("GET", "POST"))
+def edit_product(product_id):
+    product = load_product(PRODUCTS_PATH, product_id)
+
+    if request.method == "POST":
+        product['name'] = request.form['name']
+        product['unit_price'] = int(request.form['unit_price'])
+        save_product(PRODUCTS_PATH, product)
+
+    return render_template(
+        'products/edit.html',
+        create=False,
+        product=product
+    )
 
 
 if __name__ == '__main__':
