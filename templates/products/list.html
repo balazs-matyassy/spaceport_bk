@@ -2,14 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SpacePort 0.4 - Products</title>
+    <title>SpacePort 0.5 - Products</title>
+
+    <script>
+        function deleteProduct() {
+            if (confirm('Delete product?')) {
+                this.closest('form').submit();
+            }
+
+            return false;
+        }
+    </script>
 </head>
 <body>
 <nav>
     <ul>
         <li><a href="{{ url_for('home') }}">Home</a></li>
-        <li><a href="{{ url_for('list_products') }}">Products</a></li>
-        <li><a href="{{ url_for('create_product') }}">Create product</a></li>
+        <li><a href="{{ url_for('products_list') }}">Products</a></li>
+        <li><a href="{{ url_for('products_create') }}">Create product</a></li>
     </ul>
 </nav>
 
@@ -21,7 +31,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Unit price</th>
-            <th></th>
+            <th colspan="2"></th>
         </tr>
         </thead>
         <tbody>
@@ -30,7 +40,14 @@
                 <td>{{ product.id }}</td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.unit_price }}</td>
-                <td><a href="{{ url_for('edit_product', product_id=product.id) }}">Edit</a></td>
+                <td><a href="{{ url_for('products_edit', product_id=product.id) }}">Edit</a></td>
+                <td>
+                    <form action="{{ url_for('products_delete', product_id=product.id) }}"
+                          method="post"
+                          onsubmit="confirm('Delete product?')">
+                        <a href="#" onclick="deleteProduct.call(this)">Delete</a>
+                    </form>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
