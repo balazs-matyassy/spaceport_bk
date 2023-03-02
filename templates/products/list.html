@@ -8,8 +8,8 @@
 <nav>
     <ul>
         <li><a href="{{ url_for('home') }}">Home</a></li>
-        <li><a href="{{ url_for('list_products') }}">Products</a></li>
-        <li><a href="{{ url_for('create_product') }}">Create product</a></li>
+        <li><a href="{{ url_for('products_list') }}">Products</a></li>
+        <li><a href="{{ url_for('products_create') }}">Create product</a></li>
     </ul>
 </nav>
 
@@ -30,7 +30,7 @@
                 <td>{{ product.id }}</td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.unit_price }}</td>
-                <td><a href="{{ url_for('edit_product', product_id=product.id) }}">Edit</a></td>
+                <td><a href="{{ url_for('products_edit', product_id=product.id) }}">Edit</a></td>
             </tr>
         {% endfor %}
         </tbody>
