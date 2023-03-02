@@ -26,7 +26,7 @@ def home():
 
 
 @app.route('/products')
-def list_products():
+def products_list():
     products = load_all_products(PRODUCTS_PATH)
     return render_template('products/list.html', products=products)
 
