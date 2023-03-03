@@ -18,7 +18,7 @@
 
 <main>
     {% for message in get_flashed_messages() %}
-        <div>{{ message }}</div>
+        <div><b>{{ message }}</b></div>
     {% endfor %}
 
     {% block main %}{% endblock %}
