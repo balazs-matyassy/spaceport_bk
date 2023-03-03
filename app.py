@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 
 from repository.products import load_all_products, setup_products, save_product, load_product, delete_product
 
@@ -16,6 +16,7 @@ def setup():
 
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'dev'
 setup()
 
 
@@ -42,6 +43,7 @@ def products_create():
         product['name'] = request.form['name']
         product['unit_price'] = int(request.form['unit_price'])
         save_product(PRODUCTS_PATH, product)
+        flash('Product created.')
 
         return redirect(url_for("products_list"))
 
@@ -60,6 +62,7 @@ def products_edit(product_id):
         product['name'] = request.form['name']
         product['unit_price'] = int(request.form['unit_price'])
         save_product(PRODUCTS_PATH, product)
+        flash('Product saved.')
 
     return render_template(
         'products/edit.html',
@@ -71,6 +74,8 @@ def products_edit(product_id):
 @app.route('/products/<int:product_id>/delete', methods=["POST"])
 def products_delete(product_id):
     delete_product(PRODUCTS_PATH, product_id)
+    flash('Product deleted.')
+
     return redirect(url_for("products_list"))
 
 
