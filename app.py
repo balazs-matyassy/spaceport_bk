@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask
 
 from repository.products import load_all_products, setup_products_repository, save_product, load_product, delete_product
 
