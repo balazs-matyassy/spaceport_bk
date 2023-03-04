@@ -7,11 +7,17 @@ def product_header(delimiter=';'):
         + delimiter + 'unit_price'
 
 
-def setup_products(path, delimiter=';'):
+def setup_products_repository(folder, filename='products.csv', delimiter=';'):
+    os.makedirs(folder, exist_ok=True)
+
+    path = os.path.join(folder, filename)
+
     if not os.path.isfile(path):
         with open(path, 'w', encoding='utf-8') as file:
             header = product_header(delimiter)
             file.write(f'{header}\n')
+
+    return path
 
 
 def line_to_product(line, delimiter=';'):
