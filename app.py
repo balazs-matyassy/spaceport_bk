@@ -1,20 +1,6 @@
-import os
+from flask import Flask, render_template, request, redirect, url_for, flash
 
-from flask import Flask
-
-from repository.products import load_all_products, load_product, line_to_product, save_product, delete_product, \
-    setup_products
-
-
-PRODUCTS_PATH = None
-
-
-def setup():
-    global PRODUCTS_PATH
-
-    os.makedirs(app.instance_path, exist_ok=True)
-    PRODUCTS_PATH = os.path.join(app.instance_path, 'products.csv')
-    setup_products(PRODUCTS_PATH)
+from repository.products import load_all_products, setup_products_repository, save_product, load_product, delete_product
 
 
 def input_cmd():
@@ -28,7 +14,8 @@ def input_cmd():
 
 
 app = Flask(__name__)
-setup()
+
+PRODUCTS_PATH = setup_products_repository(app.instance_path)
 
 print('==================================================')
 print('\tWelcome to SpacePort 0.1')
