@@ -1,22 +1,11 @@
-import os
-
 from flask import Flask, render_template
 
-from repository.products import load_all_products, setup_products
-
-PRODUCTS_PATH = None
-
-
-def setup():
-    global PRODUCTS_PATH
-
-    os.makedirs(app.instance_path, exist_ok=True)
-    PRODUCTS_PATH = os.path.join(app.instance_path, 'products.csv')
-    setup_products(PRODUCTS_PATH)
-
+from repository.products import load_all_products, setup_products_repository
 
 app = Flask(__name__)
-setup()
+app.config['SECRET_KEY'] = 'dev'
+
+PRODUCTS_PATH = setup_products_repository(app.instance_path)
 
 
 @app.route('/')
