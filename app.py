@@ -1,9 +1,6 @@
-import os
-
 from flask import Flask, render_template, request, redirect, url_for, flash
 
 from repository.products import load_all_products, setup_products_repository, save_product, load_product, delete_product
-
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dev'
