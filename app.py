@@ -1,6 +1,7 @@
 import functools
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, g
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from models.product import Product
 from models.user import User
@@ -121,10 +122,17 @@ def users_create():
         user.username = request.form['username']
         user.password = request.form['password']
         user.admin = request.form['role'] == 'ADMIN'
-        user_repository.save(user)
-        flash('User created.')
 
-        return redirect(url_for("users_list"))
+        if user.username != '' and user.password != '':
+            user.password = generate_password_hash(user.password)
+            user_repository.save(user)
+            flash('User created.')
+
+            return redirect(url_for("users_list"))
+        elif user.username == '':
+            flash('Username missing.')
+        else:
+            flash('Password missing.')
 
     return render_template(
         'users/edit.html',
@@ -140,10 +148,16 @@ def users_edit(user_id):
 
     if request.method == "POST":
         user.username = request.form['username']
-        user.password = request.form['password']
-        user.admin = request.form['role'] == 'ADMIN'
-        user_repository.save(user)
-        flash('User saved.')
+
+        if user.username != '':
+            if request.form['password'] != '':
+                user.password = generate_password_hash(request.form['password'])
+
+            user.admin = request.form['role'] == 'ADMIN'
+            user_repository.save(user)
+            flash('User saved.')
+        else:
+            flash('Username missing.')
 
     return render_template(
         'users/edit.html',
@@ -171,7 +185,7 @@ def login():
 
         stored_user = user_repository.load_by_username(user.username)
 
-        if stored_user is not None and stored_user.password == user.password:
+        if stored_user is not None and check_password_hash(stored_user.password, user.password):
             session.clear()
             session['user_id'] = stored_user.user_id
             flash('Login successful.')

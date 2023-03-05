@@ -1,5 +1,7 @@
 import os
 
+from werkzeug.security import generate_password_hash
+
 from models.user import User
 
 
@@ -13,7 +15,12 @@ class UserRepository:
         if not os.path.isfile(self.path):
             with open(self.path, 'w', encoding='utf-8') as file:
                 header = User.create_header(self.delimiter)
+                user = User(1, 'admin', 'admin', True)
+                user.password = generate_password_hash(user.password)
+                line = user.to_line(self.delimiter)
+
                 file.write(f'{header}\n')
+                file.write(f'{line}\n')
 
     def load_all(self):
         users = []
