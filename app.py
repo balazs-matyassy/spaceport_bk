@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session, g
 
 from models.product import Product
 from models.user import User
@@ -10,6 +10,14 @@ app.config['SECRET_KEY'] = 'dev'
 
 user_repository = UserRepository(app.instance_path)
 product_repository = ProductRepository(app.instance_path)
+
+
+@app.before_request
+def load_current_user():
+    if session.get('user_id') is None:
+        g.user = None
+    else:
+        g.user = user_repository.load_by_id(session['user_id'])
 
 
 @app.route('/')
@@ -120,6 +128,36 @@ def users_delete(user_id):
     flash('User deleted.')
 
     return redirect(url_for("users_list"))
+
+
+@app.route('/login', methods=("GET", "POST"))
+def login():
+    user = User(None, '', '')
+
+    if request.method == "POST":
+        user.username = request.form['username']
+        user.password = request.form['password']
+
+        stored_user = user_repository.load_by_username(user.username)
+
+        if stored_user is not None and stored_user.password == user.password:
+            session.clear()
+            session['user_id'] = stored_user.user_id
+            flash('Login successful.')
+
+            return redirect(url_for('home'))
+        else:
+            flash('Wrong username or password.')
+
+    return render_template('users/login.html', user=user)
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('Logout successful.')
+
+    return redirect(url_for('home'))
 
 
 if __name__ == '__main__':

@@ -44,6 +44,18 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('users_create') }}">Create user</a>
                         </li>
+                        {% if not g.user %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('logout') }}">
+                                    Logout
+                                    [{{ g.user.username }}]
+                                </a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

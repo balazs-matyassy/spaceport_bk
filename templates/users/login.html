@@ -1,13 +1,7 @@
 {% extends 'base.html' %}
 
 {% block main %}
-    <h1>
-        {% if create %}
-            Create user
-        {% else %}
-            Edit user
-        {% endif %}
-    </h1>
+    <h1>Login</h1>
     <form method="post">
         <table>
             <tr>
@@ -25,23 +19,8 @@
                 </td>
             </tr>
             <tr>
-                <th><label for="role" class="form-label">Role:</label></th>
-                <td>
-                    <select name="role" id="role" class="form-control">
-                        <option{{ ' selected' if not user.admin else '' }}>USER</option>
-                        <option{{ ' selected' if user.admin else '' }}>ADMIN</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
                 <td colspan="2">
-                    <button type="submit" class="btn btn-primary">
-                        {% if create %}
-                            Create
-                        {% else %}
-                            Save
-                        {% endif %}
-                    </button>
+                    <button type="submit" class="btn btn-primary">Login</button>
                 </td>
             </tr>
         </table>
