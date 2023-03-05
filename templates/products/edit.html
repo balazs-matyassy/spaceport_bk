@@ -25,6 +25,30 @@
                 </td>
             </tr>
             <tr>
+                <th><label for="discount" class="form-label">Discount:</label></th>
+                <td>
+                    <input type="number"
+                           name="discount"
+                           value="{{ product.discount }}"
+                           min="0"
+                           max="100"
+                           id="discount"
+                           class="form-control">
+                </td>
+            </tr>
+            {% if not create %}
+                <tr>
+                <th><label for="discounted_price" class="form-label">Discounted price:</label></th>
+                <td>
+                    <input type="number"
+                           value="{{ product.discounted_price }}"
+                           id="discounted_price"
+                           class="form-control"
+                           disabled>
+                </td>
+            </tr>
+            {% endif %}
+            <tr>
                 <td colspan="2">
                     <button type="submit" class="btn btn-primary">
                         {% if create %}

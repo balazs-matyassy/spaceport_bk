@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 
+from models.product import Product
 from repository.products import load_all_products, setup_products_repository, save_product, load_product, delete_product
 
 app = Flask(__name__)
@@ -22,14 +23,12 @@ def products_list():
 
 @app.route('/products/create', methods=("GET", "POST"))
 def products_create():
-    product = {
-        'name': '',
-        'unit_price': 0
-    }
+    product = Product(None, '', 0, 0)
 
     if request.method == "POST":
-        product['name'] = request.form['name']
-        product['unit_price'] = int(request.form['unit_price'])
+        product.name = request.form['name']
+        product.unit_price = int(request.form['unit_price'])
+        product.discount = int(request.form['discount'])
         save_product(PRODUCTS_PATH, product)
         flash('Product created.')
 
@@ -47,8 +46,9 @@ def products_edit(product_id):
     product = load_product(PRODUCTS_PATH, product_id)
 
     if request.method == "POST":
-        product['name'] = request.form['name']
-        product['unit_price'] = int(request.form['unit_price'])
+        product.name = request.form['name']
+        product.unit_price = int(request.form['unit_price'])
+        product.discount = int(request.form['discount'])
         save_product(PRODUCTS_PATH, product)
         flash('Product saved.')
 
