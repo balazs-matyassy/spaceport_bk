@@ -1,12 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 
 from models.product import Product
-from repository.products import load_all_products, setup_products_repository, save_product, load_product, delete_product
+from repository.products import ProductRepository
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dev'
 
-PRODUCTS_PATH = setup_products_repository(app.instance_path)
+product_repository = ProductRepository(app.instance_path)
 
 
 @app.route('/')
@@ -17,7 +17,7 @@ def home():
 
 @app.route('/products')
 def products_list():
-    products = load_all_products(PRODUCTS_PATH)
+    products = product_repository.load_all()
     return render_template('products/list.html', products=products)
 
 
@@ -29,7 +29,7 @@ def products_create():
         product.name = request.form['name']
         product.unit_price = int(request.form['unit_price'])
         product.discount = int(request.form['discount'])
-        save_product(PRODUCTS_PATH, product)
+        product_repository.save(product)
         flash('Product created.')
 
         return redirect(url_for("products_list"))
@@ -43,13 +43,13 @@ def products_create():
 
 @app.route('/products/<int:product_id>/edit', methods=("GET", "POST"))
 def products_edit(product_id):
-    product = load_product(PRODUCTS_PATH, product_id)
+    product = product_repository.load_by_id(product_id)
 
     if request.method == "POST":
         product.name = request.form['name']
         product.unit_price = int(request.form['unit_price'])
         product.discount = int(request.form['discount'])
-        save_product(PRODUCTS_PATH, product)
+        product_repository.save(product)
         flash('Product saved.')
 
     return render_template(
@@ -61,7 +61,7 @@ def products_edit(product_id):
 
 @app.route('/products/<int:product_id>/delete', methods=["POST"])
 def products_delete(product_id):
-    delete_product(PRODUCTS_PATH, product_id)
+    product_repository.delete(product_id)
     flash('Product deleted.')
 
     return redirect(url_for("products_list"))
