@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SpacePort 0.14</title>
+    <title>SpacePort 0.15</title>
 
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     {% block css %}{% endblock %}
@@ -14,7 +14,7 @@
     <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
         <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
             <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo">
-            <span class="fs-4">SpacePort 0.14</span>
+            <span class="fs-4">SpacePort 0.15</span>
         </a>
     </header>
 
@@ -33,29 +33,29 @@
                             <a class="nav-link" href="{{ url_for('home') }}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('products_list') }}">Products</a>
+                            <a class="nav-link" href="{{ url_for('products.products_list') }}">Products</a>
                         </li>
                         {% if g.user %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('products_create') }}">Create product</a>
+                                <a class="nav-link" href="{{ url_for('products.products_create') }}">Create product</a>
                             </li>
                             {% if g.user.admin %}
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ url_for('users_list') }}">Users</a>
+                                    <a class="nav-link" href="{{ url_for('users.users_list') }}">Users</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ url_for('users_create') }}">Create user</a>
+                                    <a class="nav-link" href="{{ url_for('users.users_create') }}">Create user</a>
                                 </li>
                             {% endif %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('logout') }}">
+                                <a class="nav-link" href="{{ url_for('login.logout') }}">
                                     Logout
                                     [{{ g.user.username }}]
                                 </a>
                             </li>
                         {% else %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                                <a class="nav-link" href="{{ url_for('login.login') }}">Login</a>
                             </li>
                         {% endif %}
                     </ul>
