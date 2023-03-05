@@ -22,7 +22,9 @@
             <th>Unit price</th>
             <th>Discount</th>
             <th>Discounted price</th>
-            <th colspan="2"></th>
+            {% if g.user %}
+                <th colspan="2"></th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -33,14 +35,16 @@
                 <td>{{ product.unit_price }}</td>
                 <td>{{ product.discount }}</td>
                 <td>{{ product.discounted_price }}</td>
-                <td><a href="{{ url_for('products_edit', product_id=product.product_id) }}">Edit</a></td>
-                <td>
-                    <form action="{{ url_for('products_delete', product_id=product.product_id) }}"
-                          method="post"
-                          onsubmit="confirm('Delete product?')">
-                        <a href="#" onclick="deleteProduct.call(this)">Delete</a>
-                    </form>
-                </td>
+                {% if g.user %}
+                    <td><a href="{{ url_for('products_edit', product_id=product.product_id) }}">Edit</a></td>
+                    <td>
+                        <form action="{{ url_for('products_delete', product_id=product.product_id) }}"
+                              method="post"
+                              onsubmit="confirm('Delete product?')">
+                            <a href="#" onclick="deleteProduct.call(this)">Delete</a>
+                        </form>
+                    </td>
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>

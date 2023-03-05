@@ -1,3 +1,5 @@
+import functools
+
 from flask import Flask, render_template, request, redirect, url_for, flash, session, g
 
 from models.product import Product
@@ -10,6 +12,28 @@ app.config['SECRET_KEY'] = 'dev'
 
 user_repository = UserRepository(app.instance_path)
 product_repository = ProductRepository(app.instance_path)
+
+
+def fully_authenticated(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('login'))
+
+        return view(**kwargs)
+
+    return wrapped_view
+
+
+def admin_granted(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None or not g.user.admin:
+            return redirect(url_for('login'))
+
+        return view(**kwargs)
+
+    return wrapped_view
 
 
 @app.before_request
@@ -33,6 +57,7 @@ def products_list():
 
 
 @app.route('/products/create', methods=("GET", "POST"))
+@fully_authenticated
 def products_create():
     product = Product(None, '', 0, 0)
 
@@ -53,6 +78,7 @@ def products_create():
 
 
 @app.route('/products/<int:product_id>/edit', methods=("GET", "POST"))
+@fully_authenticated
 def products_edit(product_id):
     product = product_repository.load_by_id(product_id)
 
@@ -71,6 +97,7 @@ def products_edit(product_id):
 
 
 @app.route('/products/<int:product_id>/delete', methods=["POST"])
+@fully_authenticated
 def products_delete(product_id):
     product_repository.delete(product_id)
     flash('Product deleted.')
@@ -79,12 +106,14 @@ def products_delete(product_id):
 
 
 @app.route('/users')
+@admin_granted
 def users_list():
     users = user_repository.load_all()
     return render_template('users/list.html', users=users)
 
 
 @app.route('/users/create', methods=("GET", "POST"))
+@admin_granted
 def users_create():
     user = User(None, '', '')
 
@@ -105,6 +134,7 @@ def users_create():
 
 
 @app.route('/users/<int:user_id>/edit', methods=("GET", "POST"))
+@admin_granted
 def users_edit(user_id):
     user = user_repository.load_by_id(user_id)
 
@@ -123,6 +153,7 @@ def users_edit(user_id):
 
 
 @app.route('/users/<int:user_id>/delete', methods=["POST"])
+@admin_granted
 def users_delete(user_id):
     user_repository.delete(user_id)
     flash('User deleted.')
