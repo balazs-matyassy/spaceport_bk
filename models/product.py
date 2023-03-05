@@ -18,11 +18,11 @@ class Product:
         values = line.split(delimiter)
 
         if len(values) >= 4:
-            return Product(int(values[0]), values[1], int(values[2]), int(values[3]))
+            return Product(int(values[0].strip()), values[1].strip(), int(values[2].strip()), int(values[3].strip()))
         elif len(values) >= 3:
-            return Product(None, values[0], int(values[1]), int(values[2]))
+            return Product(None, values[0].strip(), int(values[1]), int(values[2]))
         else:
-            return Product(None, values[0], int(values[1]))
+            return Product(None, values[0].strip(), int(values[1]))
 
     @property
     def discounted_price(self):

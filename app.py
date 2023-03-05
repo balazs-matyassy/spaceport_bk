@@ -1,11 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 
 from models.product import Product
+from models.user import User
 from repository.products import ProductRepository
+from repository.users import UserRepository
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dev'
 
+user_repository = UserRepository(app.instance_path)
 product_repository = ProductRepository(app.instance_path)
 
 
@@ -65,6 +68,58 @@ def products_delete(product_id):
     flash('Product deleted.')
 
     return redirect(url_for("products_list"))
+
+
+@app.route('/users')
+def users_list():
+    users = user_repository.load_all()
+    return render_template('users/list.html', users=users)
+
+
+@app.route('/users/create', methods=("GET", "POST"))
+def users_create():
+    user = User(None, '', '')
+
+    if request.method == "POST":
+        user.username = request.form['username']
+        user.password = request.form['password']
+        user.admin = request.form['role'] == 'ADMIN'
+        user_repository.save(user)
+        flash('User created.')
+
+        return redirect(url_for("users_list"))
+
+    return render_template(
+        'users/edit.html',
+        create=True,
+        user=user
+    )
+
+
+@app.route('/users/<int:user_id>/edit', methods=("GET", "POST"))
+def users_edit(user_id):
+    user = user_repository.load_by_id(user_id)
+
+    if request.method == "POST":
+        user.username = request.form['username']
+        user.password = request.form['password']
+        user.admin = request.form['role'] == 'ADMIN'
+        user_repository.save(user)
+        flash('User saved.')
+
+    return render_template(
+        'users/edit.html',
+        create=False,
+        user=user
+    )
+
+
+@app.route('/users/<int:user_id>/delete', methods=["POST"])
+def users_delete(user_id):
+    user_repository.delete(user_id)
+    flash('User deleted.')
+
+    return redirect(url_for("users_list"))
 
 
 if __name__ == '__main__':
