@@ -11,6 +11,21 @@
     <form method="post">
         <table>
             <tr>
+                <th><label for="category" class="form-label">Category:</label></th>
+                <td>
+                    <select name="category" id="category" class="form-control">
+                        <option value="0" disabled>-- select category --</option>
+                        {% for category in categories %}
+                            {% if category.category_id == product.category_id %}
+                                <option value="{{ category.category_id }}" selected>{{ category.name }}</option>
+                            {% else %}
+                                <option value="{{ category.category_id }}">{{ category.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
                 <th><label for="name" class="form-label">Name:</label></th>
                 <td><input type="text" name="name" value="{{ product.name }}" id="name" class="form-control"></td>
             </tr>

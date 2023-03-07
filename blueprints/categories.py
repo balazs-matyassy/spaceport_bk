@@ -21,12 +21,16 @@ def categories_create():
 
     if request.method == "POST":
         category.name = request.form['name']
-        category_repository = get_category_repository()
-        category_repository.save(category)
 
-        flash('Category created.')
+        if category.name != '':
+            category_repository = get_category_repository()
+            category_repository.save(category)
 
-        return redirect(url_for("categories.categories_list"))
+            flash('Category created.')
+
+            return redirect(url_for("categories.categories_list"))
+        else:
+            flash('Name missing.')
 
     return render_template(
         'categories/edit.html',
@@ -43,7 +47,12 @@ def categories_edit(category_id):
 
     if request.method == "POST":
         category.name = request.form['name']
-        flash('Category saved.')
+
+        if category.name != '':
+            category_repository.save(category)
+            flash('Category saved.')
+        else:
+            flash('Name missing')
 
     return render_template(
         'categories/edit.html',

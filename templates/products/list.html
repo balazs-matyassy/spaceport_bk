@@ -18,6 +18,7 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>Category</th>
             <th>Name</th>
             <th>Unit price</th>
             <th>Discount</th>
@@ -31,6 +32,7 @@
         {% for product in products %}
             <tr>
                 <td>{{ product.product_id }}</td>
+                <td>{{ categories.get(product.category_id).name }}</td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.unit_price }}</td>
                 <td>{{ product.discount }}</td>
