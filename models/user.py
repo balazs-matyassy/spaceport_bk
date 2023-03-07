@@ -1,4 +1,7 @@
-class User:
+from models.model import Model
+
+
+class User(Model):
     def __init__(self, user_id, username, password, admin=False):
         self.user_id = user_id
         self.username = username

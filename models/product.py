@@ -1,4 +1,7 @@
-class Product:
+from models.model import Model
+
+
+class Product(Model):
     def __init__(self, product_id, name, unit_price, discount=0):
         self.product_id = product_id
         self.name = name
