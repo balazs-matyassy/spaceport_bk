@@ -29,7 +29,7 @@ def products_create():
 
         flash('Product created.')
 
-        return redirect(url_for("products_list"))
+        return redirect(url_for("products.products_list"))
 
     return render_template(
         'products/edit.html',
@@ -65,4 +65,4 @@ def products_delete(product_id):
     product_repository.delete(product_id)
     flash('Product deleted.')
 
-    return redirect(url_for("products_list"))
+    return redirect(url_for("products.products_list"))
