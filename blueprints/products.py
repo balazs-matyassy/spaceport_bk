@@ -56,7 +56,7 @@ def products_edit(product_id):
             product_repository.save(product)
             flash('Product saved.')
         else:
-            flash('Name missing')
+            flash('Name missing.')
 
     return render_template(
         'products/edit.html',
