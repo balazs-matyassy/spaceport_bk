@@ -11,7 +11,7 @@ class Repository:
 
         if not os.path.isfile(self.path):
             with open(self.path, 'w', encoding='utf-8') as file:
-                header = self.model_class.get_header(self.delimiter)
+                header = self.model_class.create_header(self.delimiter)
                 file.write(f'{header}\n')
 
     def load_all(self):
@@ -28,7 +28,7 @@ class Repository:
 
     def save_all(self, entities):
         with open(self.path, 'w', encoding='utf-8') as file:
-            header = self.model_class.get_header(self.delimiter)
+            header = self.model_class.create_header(self.delimiter)
             file.write(f'{header}\n')
 
             for entity in entities:

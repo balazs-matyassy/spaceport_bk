@@ -1,6 +1,6 @@
 from flask import Flask, render_template, session, g
 
-from blueprints import users, products, login
+from blueprints import users, products, login, categories
 from db import get_user_repository
 
 app = Flask(__name__)
@@ -8,6 +8,7 @@ app.config['SECRET_KEY'] = 'dev'
 
 app.register_blueprint(login.bp)
 app.register_blueprint(users.bp)
+app.register_blueprint(categories.bp)
 app.register_blueprint(products.bp)
 
 

@@ -34,7 +34,7 @@ def users_create():
 
             flash('User created.')
 
-            return redirect(url_for("users_list"))
+            return redirect(url_for("users.users_list"))
         elif user.username == '':
             flash('Username missing.')
         else:
@@ -80,4 +80,4 @@ def users_delete(user_id):
     user_repository.delete(user_id)
     flash('User deleted.')
 
-    return redirect(url_for("users_list"))
+    return redirect(url_for("users.users_list"))

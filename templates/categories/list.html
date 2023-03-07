@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block js %}
+    <script>
+        function deleteCategory() {
+            if (confirm('Delete category?')) {
+                this.closest('form').submit();
+            }
+
+            return false;
+        }
+    </script>
+{% endblock %}
+
+{% block main %}
+    <h1>Categories</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            {% if g.user %}
+                <th colspan="2"></th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for category in categories %}
+            <tr>
+                <td>{{ category.category_id }}</td>
+                <td>{{ category.name }}</td>
+                {% if g.user %}
+                    <td><a href="{{ url_for('categories.categories_edit', category_id=category.category_id) }}">Edit</a></td>
+                    <td>
+                        <form action="{{ url_for('categories.categories_delete', category_id=category.category_id) }}"
+                              method="post"
+                              onsubmit="confirm('Delete category?')">
+                            <a href="#" onclick="deleteCategory.call(this)">Delete</a>
+                        </form>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+{% endblock %}
