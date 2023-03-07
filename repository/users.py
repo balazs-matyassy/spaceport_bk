@@ -98,12 +98,10 @@ class UserRepository:
         users = self.load_all()
         updated_user = None
 
-        for stored_user in users:
-            if stored_user.user_id == user.user_id:
-                stored_user.username = user.username
-                stored_user.password = user.password
-                stored_user.admin = user.admin
-                updated_user = stored_user
+        for i in range(len(users)):
+            if users[i].user_id == user.user_id:
+                users[i] = user
+                updated_user = users[i]
                 break
 
         if updated_user is not None:
