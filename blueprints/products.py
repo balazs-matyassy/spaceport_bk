@@ -24,12 +24,15 @@ def products_create():
         product.unit_price = int(request.form['unit_price'])
         product.discount = int(request.form['discount'])
 
-        product_repository = get_product_repository()
-        product_repository.save(product)
+        if product.name != '':
+            product_repository = get_product_repository()
+            product_repository.save(product)
 
-        flash('Product created.')
+            flash('Product created.')
 
-        return redirect(url_for("products.products_list"))
+            return redirect(url_for("products.products_list"))
+        else:
+            flash('Name missing.')
 
     return render_template(
         'products/edit.html',
@@ -48,8 +51,12 @@ def products_edit(product_id):
         product.name = request.form['name']
         product.unit_price = int(request.form['unit_price'])
         product.discount = int(request.form['discount'])
-        product_repository.save(product)
-        flash('Product saved.')
+
+        if product.name != '':
+            product_repository.save(product)
+            flash('Product saved.')
+        else:
+            flash('Name missing.')
 
     return render_template(
         'products/edit.html',
