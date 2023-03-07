@@ -43,7 +43,12 @@ def categories_edit(category_id):
 
     if request.method == "POST":
         category.name = request.form['name']
-        flash('Category saved.')
+
+        if category.name != '':
+            category_repository.save(category)
+            flash('Category saved.')
+        else:
+            flash('Name missing')
 
     return render_template(
         'categories/edit.html',
