@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 
 from auth import fully_authenticated
-from db import get_category_repository
+from db import get_category_repository, get_product_repository
 from models.category import Category
 
 bp = Blueprint('categories', __name__, url_prefix="/categories")
@@ -64,6 +64,9 @@ def categories_edit(category_id):
 @bp.route('/<int:category_id>/delete', methods=["POST"])
 @fully_authenticated
 def categories_delete(category_id):
+    product_repository = get_product_repository()
+    product_repository.delete_by_category(category_id)
+
     category_repository = get_category_repository()
     category_repository.delete(category_id)
     flash('Category deleted.')
