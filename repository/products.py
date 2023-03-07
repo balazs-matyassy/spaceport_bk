@@ -89,12 +89,10 @@ class ProductRepository:
         products = self.load_all()
         updated_product = None
 
-        for stored_product in products:
-            if stored_product.product_id == product.product_id:
-                stored_product.name = product.name
-                stored_product.unit_price = product.unit_price
-                stored_product.discount = product.discount
-                updated_product = stored_product
+        for i in range(len(products)):
+            if products[i].product_id == product.product_id:
+                products[i] = product
+                updated_product = products[i]
                 break
 
         if updated_product is not None:
