@@ -13,7 +13,12 @@
 {% endblock %}
 
 {% block main %}
-    <h1>Products</h1>
+    <h1>
+        {% if category_id is defined %}
+            {{ categories.get(category_id).name }}
+        {% endif %}
+        Products
+    </h1>
     <table class="table">
         <thead>
         <tr>

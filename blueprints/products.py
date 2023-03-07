@@ -25,6 +25,25 @@ def products_list():
     )
 
 
+@bp.route('/by-category/<int:category_id>')
+def products_by_category(category_id):
+    category_repository = get_category_repository()
+    categories_list = category_repository.load_all()
+    categories_dict = {}
+
+    for category in categories_list:
+        categories_dict[category.category_id] = category
+
+    product_repository = get_product_repository()
+    products = product_repository.load_all_by_category(category_id)
+    return render_template(
+        'products/list.html',
+        categories=categories_dict,
+        category_id=category_id,
+        products=products
+    )
+
+
 @bp.route('/create', methods=("GET", "POST"))
 @fully_authenticated
 def products_create():

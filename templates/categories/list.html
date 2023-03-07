@@ -20,7 +20,9 @@
             <th>ID</th>
             <th>Name</th>
             {% if g.user %}
-                <th colspan="2"></th>
+                <th colspan="3"></th>
+            {% else %}
+                <th></th>
             {% endif %}
         </tr>
         </thead>
@@ -29,6 +31,11 @@
             <tr>
                 <td>{{ category.category_id }}</td>
                 <td>{{ category.name }}</td>
+                <td>
+                    <a href="{{ url_for('products.products_by_category', category_id=category.category_id) }}">
+                        Products
+                    </a>
+                </td>
                 {% if g.user %}
                     <td><a href="{{ url_for('categories.categories_edit', category_id=category.category_id) }}">Edit</a></td>
                     <td>
