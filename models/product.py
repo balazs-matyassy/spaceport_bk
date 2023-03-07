@@ -28,6 +28,12 @@ class Product:
     def discounted_price(self):
         return round((self.unit_price * (100 - self.discount)) / 100)
 
+    def get_id(self):
+        return self.product_id
+
+    def set_id(self, entity_id):
+        self.product_id = entity_id
+
     def to_line(self, delimiter=';'):
         return str(self.product_id) \
             + delimiter + self.name \

@@ -24,6 +24,12 @@ class User:
         else:
             return User(None, values[0].strip(), values[1].strip())
 
+    def get_id(self):
+        return self.user_id
+
+    def set_id(self, entity_id):
+        self.user_id = entity_id
+
     def to_line(self, delimiter=';'):
         return str(self.user_id) \
             + delimiter + self.username \
