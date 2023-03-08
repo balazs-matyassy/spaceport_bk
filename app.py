@@ -30,9 +30,11 @@ def products_create():
     if request.method == "POST":
         product['name'] = request.form['name']
         product['unit_price'] = int(request.form['unit_price'])
-        save_product(PRODUCTS_PATH, product)
 
-        return redirect(url_for("products_list"))
+        if product['name'] != '':
+            save_product(PRODUCTS_PATH, product)
+
+            return redirect(url_for("products_list"))
 
     return render_template(
         'products/edit.html',
@@ -48,7 +50,9 @@ def products_edit(product_id):
     if request.method == "POST":
         product['name'] = request.form['name']
         product['unit_price'] = int(request.form['unit_price'])
-        save_product(PRODUCTS_PATH, product)
+
+        if product['name'] != '':
+            save_product(PRODUCTS_PATH, product)
 
     return render_template(
         'products/edit.html',
