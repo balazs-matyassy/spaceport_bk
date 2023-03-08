@@ -29,10 +29,14 @@ def products_create():
         product.name = request.form['name']
         product.unit_price = int(request.form['unit_price'])
         product.discount = int(request.form['discount'])
-        save_product(PRODUCTS_PATH, product)
-        flash('Product created.')
 
-        return redirect(url_for("products_list"))
+        if product.name != '':
+            save_product(PRODUCTS_PATH, product)
+            flash('Product created.')
+
+            return redirect(url_for("products_list"))
+        else:
+            flash('Name missing.')
 
     return render_template(
         'products/edit.html',
@@ -49,8 +53,12 @@ def products_edit(product_id):
         product.name = request.form['name']
         product.unit_price = int(request.form['unit_price'])
         product.discount = int(request.form['discount'])
-        save_product(PRODUCTS_PATH, product)
-        flash('Product saved.')
+
+        if product.name != '':
+            save_product(PRODUCTS_PATH, product)
+            flash('Product saved.')
+        else:
+            flash('Name missing.')
 
     return render_template(
         'products/edit.html',
