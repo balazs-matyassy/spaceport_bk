@@ -129,10 +129,16 @@ def users_create():
         user.username = request.form['username']
         user.password = request.form['password']
         user.admin = request.form['role'] == 'ADMIN'
-        user_repository.save(user)
-        flash('User created.')
 
-        return redirect(url_for("users_list"))
+        if user.username != '' and user.password != '':
+            user_repository.save(user)
+            flash('User created.')
+
+            return redirect(url_for("users_list"))
+        elif user.username == '':
+            flash('Username missing.')
+        else:
+            flash('Password missing.')
 
     return render_template(
         'users/edit.html',
@@ -150,8 +156,14 @@ def users_edit(user_id):
         user.username = request.form['username']
         user.password = request.form['password']
         user.admin = request.form['role'] == 'ADMIN'
-        user_repository.save(user)
-        flash('User saved.')
+
+        if user.username != '' and user.password != '':
+            user_repository.save(user)
+            flash('User saved.')
+        elif user.username == '':
+            flash('Username missing.')
+        else:
+            flash('Password missing.')
 
     return render_template(
         'users/edit.html',
