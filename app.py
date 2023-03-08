@@ -1,6 +1,7 @@
 from flask import Flask
 
-from repository.products import load_all_products, setup_products_repository, save_product, load_product, delete_product
+from repository.products import load_all_products, setup_products_repository, save_product, load_product, \
+    delete_product, line_to_product
 
 
 def input_cmd():
