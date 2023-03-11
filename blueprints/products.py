@@ -10,14 +10,14 @@ bp = Blueprint('products', __name__, url_prefix="/products")
 @bp.route('/')
 def products_list():
     category_repository = get_category_repository()
-    categories_list = category_repository.load_all()
+    categories_list = category_repository.find_all()
     categories_dict = {}
 
     for category in categories_list:
         categories_dict[category.category_id] = category
 
     product_repository = get_product_repository()
-    products = product_repository.load_all()
+    products = product_repository.find_all()
     return render_template(
         'products/list.html',
         categories=categories_dict,
@@ -28,7 +28,7 @@ def products_list():
 @bp.route('/by-category/<int:category_id>')
 def products_by_category(category_id):
     category_repository = get_category_repository()
-    categories_list = category_repository.load_all()
+    categories_list = category_repository.find_all()
     categories_dict = {}
 
     for category in categories_list:
@@ -68,7 +68,7 @@ def products_create():
             flash('Name missing.')
 
     category_repository = get_category_repository()
-    categories = category_repository.load_all()
+    categories = category_repository.find_all()
 
     return render_template(
         'products/edit.html',
@@ -82,7 +82,7 @@ def products_create():
 @fully_authenticated
 def products_edit(product_id):
     product_repository = get_product_repository()
-    product = product_repository.load_by_id(product_id)
+    product = product_repository.load_one_by_id(product_id)
 
     if request.method == "POST":
         product.category_id = int(request.form['category'])
@@ -99,7 +99,7 @@ def products_edit(product_id):
             flash('Name missing.')
 
     category_repository = get_category_repository()
-    categories = category_repository.load_all()
+    categories = category_repository.find_all()
 
     return render_template(
         'products/edit.html',
@@ -113,7 +113,7 @@ def products_edit(product_id):
 @fully_authenticated
 def products_delete(product_id):
     product_repository = get_product_repository()
-    product_repository.delete(product_id)
+    product_repository.delete_by_id(product_id)
     flash('Product deleted.')
 
     return redirect(url_for("products.products_list"))

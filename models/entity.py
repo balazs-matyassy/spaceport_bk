@@ -9,7 +9,3 @@ class Model:
     @abstractmethod
     def set_id(self, entity_id):
         raise NotImplementedError
-
-    @abstractmethod
-    def to_line(self, delimiter=';'):
-        raise NotImplementedError

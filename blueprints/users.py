@@ -12,7 +12,7 @@ bp = Blueprint("users", __name__, url_prefix="/users")
 @admin_granted
 def users_list():
     user_repository = get_user_repository()
-    users = user_repository.load_all()
+    users = user_repository.find_all()
     return render_template('users/list.html', users=users)
 
 
@@ -51,7 +51,7 @@ def users_create():
 @admin_granted
 def users_edit(user_id):
     user_repository = get_user_repository()
-    user = user_repository.load_by_id(user_id)
+    user = user_repository.load_one_by_id(user_id)
 
     if request.method == "POST":
         user.username = request.form['username']
@@ -77,7 +77,7 @@ def users_edit(user_id):
 @admin_granted
 def users_delete(user_id):
     user_repository = get_user_repository()
-    user_repository.delete(user_id)
+    user_repository.delete_by_id(user_id)
     flash('User deleted.')
 
     return redirect(url_for("users.users_list"))

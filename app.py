@@ -18,7 +18,7 @@ def load_current_user():
         g.user = None
     else:
         user_repository = get_user_repository()
-        g.user = user_repository.load_by_id(session['user_id'])
+        g.user = user_repository.load_one_by_id(session['user_id'])
 
 
 @app.route('/')
