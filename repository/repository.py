@@ -1,100 +1,80 @@
-import os
+from abc import abstractmethod
 
 
 class Repository:
-    def __init__(self, model_class, folder, filename, delimiter=';'):
-        self.model_class = model_class
-        self.path = os.path.join(folder, filename)
-        self.delimiter = delimiter
+    def __init__(self, db, table):
+        self.db = db
+        self.table = table
 
-        os.makedirs(folder, exist_ok=True)
+    def find_all(self):
+        query = f"""
+            SELECT *
+            FROM {self.table}
+            ORDER BY id
+        """
 
-        if not os.path.isfile(self.path):
-            with open(self.path, 'w', encoding='utf-8') as file:
-                header = self.model_class.create_header(self.delimiter)
-                file.write(f'{header}\n')
+        return self._find_all_by_query(query)
 
-    def load_all(self):
-        entities = []
+    def find_one_by_id(self, entity_id):
+        query = f"""
+            SELECT *
+            FROM {self.table}
+            WHERE id = ?
+        """
 
-        with open(self.path, encoding='utf-8') as file:
-            file.readline()
+        return self._find_one_by_query(query, (entity_id,))
 
-            for line in file:
-                entity = self.model_class.create_from_line(line, self.delimiter)
-                entities.append(entity)
-
-            return entities
-
-    def save_all(self, entities):
-        with open(self.path, 'w', encoding='utf-8') as file:
-            header = self.model_class.create_header(self.delimiter)
-            file.write(f'{header}\n')
-
-            for entity in entities:
-                line = entity.to_line(self.delimiter)
-                file.write(f'{line}\n')
-
-    def load_by_id(self, entity_id):
-        entities = self.load_all()
-
-        for entity in entities:
-            if entity.get_id() == entity_id:
-                return entity
-
-        return None
-
-    def save(self, entity):
-        if entity.get_id() is None:
+    def save(self, category):
+        if category.get_id() is None:
             # CREATE
-            return self.__create(entity)
+            return self._create(category)
         else:
             # UPDATE
-            return self.__update(entity)
+            return self._update(category)
 
-    def delete(self, entity_id):
-        entities = self.load_all()
-        filtered = []
-        deleted_entity = None
+    def delete_by_id(self, entity_id):
+        query = f"""
+            DELETE FROM {self.table}
+            WHERE id = ?
+        """
+        rowcount = self.db.execute(query, (entity_id,)).rowcount
+        self.db.commit()
 
-        for entity in entities:
-            if entity.get_id() != entity_id:
-                filtered.append(entity)
-            else:
-                deleted_entity = entity
+        return rowcount
 
-        if deleted_entity is not None:
-            self.save_all(filtered)
+    def _find_all_by_query(self, query, params=None):
+        if params is not None:
+            result = self.db.execute(query, params).fetchall()
+        else:
+            result = self.db.execute(query).fetchall()
 
-        return deleted_entity
+        entities = []
 
-    def __create(self, entity):
-        entities = self.load_all()
-        max_id = 0
+        for row in result:
+            entity = self._row_to_entity(row)
+            entities.append(entity)
 
-        for stored_entity in entities:
-            if stored_entity.get_id() > max_id:
-                max_id = stored_entity.get_id()
+        return entities
 
-        entity.set_id(max_id + 1)
+    def _find_one_by_query(self, query, params=None):
+        if params is not None:
+            row = self.db.execute(query, params).fetchone()
+        else:
+            row = self.db.execute(query).fetchone()
 
-        with open(self.path, 'a', encoding='utf-8') as file:
-            line = entity.to_line(self.delimiter)
-            file.write(f'{line}\n')
+        if row is not None:
+            return self._row_to_entity(row)
+        else:
+            return None
 
-        return entity
+    @abstractmethod
+    def _row_to_entity(self, row):
+        raise NotImplementedError
 
-    def __update(self, entity):
-        entities = self.load_all()
-        updated_entity = None
+    @abstractmethod
+    def _create(self, entity):
+        raise NotImplementedError
 
-        for i in range(len(entities)):
-            if entities[i].get_id() == entity.get_id():
-                entities[i] = entity
-                updated_entity = entities[i]
-                break
-
-        if updated_entity is not None:
-            self.save_all(entities)
-
-        return updated_entity
+    @abstractmethod
+    def _update(self, entity):
+        raise NotImplementedError

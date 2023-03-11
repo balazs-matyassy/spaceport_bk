@@ -1,10 +1,16 @@
+import os
+
 from flask import Flask, render_template, session, g
 
 from blueprints import users, products, login, categories
-from db import get_user_repository
+from db import get_user_repository, close_db, init_db_command
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dev'
+app.config['DATABASE'] = os.path.join(app.instance_path, 'spaceport.sqlite')
+
+app.teardown_appcontext(close_db)
+app.cli.add_command(init_db_command)
 
 app.register_blueprint(login.bp)
 app.register_blueprint(users.bp)
@@ -18,7 +24,7 @@ def load_current_user():
         g.user = None
     else:
         user_repository = get_user_repository()
-        g.user = user_repository.load_by_id(session['user_id'])
+        g.user = user_repository.find_one_by_id(session['user_id'])
 
 
 @app.route('/')

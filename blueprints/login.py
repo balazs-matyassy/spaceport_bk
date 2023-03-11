@@ -16,7 +16,7 @@ def login():
         user.password = request.form['password']
 
         user_repository = get_user_repository()
-        stored_user = user_repository.load_by_username(user.username)
+        stored_user = user_repository.find_one_by_username(user.username)
 
         if stored_user is not None and check_password_hash(stored_user.password, user.password):
             session.clear()

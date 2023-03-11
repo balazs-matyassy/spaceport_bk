@@ -10,7 +10,7 @@ bp = Blueprint('categories', __name__, url_prefix="/categories")
 @bp.route('/')
 def categories_list():
     category_repository = get_category_repository()
-    categories = category_repository.load_all()
+    categories = category_repository.find_all()
     return render_template('categories/list.html', categories=categories)
 
 
@@ -43,7 +43,7 @@ def categories_create():
 @fully_authenticated
 def categories_edit(category_id):
     category_repository = get_category_repository()
-    category = category_repository.load_by_id(category_id)
+    category = category_repository.find_one_by_id(category_id)
 
     if request.method == "POST":
         category.name = request.form['name']
@@ -68,7 +68,7 @@ def categories_delete(category_id):
     product_repository.delete_by_category(category_id)
 
     category_repository = get_category_repository()
-    category_repository.delete(category_id)
+    category_repository.delete_by_id(category_id)
     flash('Category deleted.')
 
     return redirect(url_for("categories.categories_list"))
